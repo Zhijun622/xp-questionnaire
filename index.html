@@ -43,13 +43,12 @@
       <article class="question-card">
         <div class="question-label"><span class="question-index" id="question-index">QUESTION 01</span><span class="question-decoration">✧</span></div>
         <h3 id="question-title"></h3>
-        <p class="choose-hint">如果是你，第一反应会是什么？</p>
+        <p class="choose-hint">选好后会自动进入下一题，不用再点下一步。</p>
         <div id="options-list" class="options-list"></div>
       </article>
       <div class="quiz-footer">
         <button id="prev-btn" class="text-btn" disabled>← 上一题</button>
-        <span class="autosave-note">你的选择仅在本次页面中使用</span>
-        <button id="next-btn" class="next-btn" disabled>下一题 <span>→</span></button>
+        <span class="autosave-note">你的选择仅在本次页面中使用 · 选择后自动跳转</span>
       </div>
     </section>
 
@@ -59,11 +58,8 @@
       <p class="kicker">你的互动偏好画像</p>
       <h2 id="result-title"></h2>
       <p id="result-tag" class="result-tag"></p>
-      <p id="result-summary" class="result-summary"></p>
-      <div class="result-detail-grid">
-        <article class="detail-card"><span class="detail-icon">☾</span><h3>情节感</h3><p id="result-scene"></p></article>
-        <article class="detail-card"><span class="detail-icon">✦</span><h3>为什么会这样</h3><p id="result-why"></p></article>
-        <article class="detail-card match-card"><span class="detail-icon">♡</span><h3>适配类型</h3><p id="result-match"></p></article>
+      <div class="result-description-wrap">
+        <p id="result-summary" class="result-summary"></p>
       </div>
       <section class="score-panel">
         <div class="score-heading"><div><p class="kicker">YOUR ANSWER PATTERN</p><h3>你的选择分布</h3></div><span>共 25 题</span></div>

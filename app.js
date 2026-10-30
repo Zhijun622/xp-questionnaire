@@ -36,14 +36,16 @@
       button.append(key, text);
       button.addEventListener("click", () => {
         answers[current] = option.key;
-        renderQuestion();
+        if (current < data.questions.length - 1) {
+          current += 1;
+          renderQuestion();
+        } else {
+          renderResult();
+        }
       });
       $("options-list").appendChild(button);
     });
     $("prev-btn").disabled = current === 0;
-    $("next-btn").disabled = !answered;
-    $("next-btn").innerHTML = current === data.questions.length - 1
-      ? "查看结果 <span>✧</span>" : "下一题 <span>→</span>";
   }
 
   function getOutcome(counts) {
@@ -65,10 +67,7 @@
     const result = data.results[outcome.key];
     $("result-title").textContent = result.title;
     $("result-tag").textContent = result.tag;
-    $("result-summary").textContent = result.summary;
-    $("result-scene").textContent = result.scene;
-    $("result-why").textContent = result.why;
-    $("result-match").textContent = result.match;
+    $("result-summary").textContent = result.description;
     $("score-bars").innerHTML = "";
     Object.entries(counts).forEach(([key, value]) => {
       const row = document.createElement("div");
@@ -101,15 +100,6 @@
   });
   $("prev-btn").addEventListener("click", () => {
     if (current > 0) { current -= 1; renderQuestion(); }
-  });
-  $("next-btn").addEventListener("click", () => {
-    if (answers[current] === null) return;
-    if (current < data.questions.length - 1) {
-      current += 1;
-      renderQuestion();
-    } else {
-      renderResult();
-    }
   });
   $("restart-btn").addEventListener("click", () => {
     current = 0;
