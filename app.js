@@ -6,6 +6,8 @@
   let current = 0;
   let answers = Array(data.questions.length).fill(null);
   let lastResultText = "";
+  let myResultKey = null;
+  let partnerKey = null;
 
   const showScreen = (id) => {
     screens.forEach((screenId) => $(screenId).classList.toggle("hidden", screenId !== id));
@@ -14,7 +16,6 @@
 
   function renderQuestion() {
     const q = data.questions[current];
-    const answered = answers[current] !== null;
     $("current-number").textContent = String(current + 1).padStart(2, "0");
     $("question-index").textContent = `QUESTION ${String(current + 1).padStart(2, "0")}`;
     $("question-title").textContent = q.question;
@@ -51,23 +52,112 @@
   function getOutcome(counts) {
     const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
     const [first, second, third] = sorted;
-    // 先判断三高：前三名的分数跨度不超过 2，即归入多面型。
     if (first[1] - third[1] <= 2) return { key: "BALANCED", reason: "前三项分数接近，偏好较为多元" };
-    // 纯型：最高项至少比其余每一项多 3 个。
     if (first[1] - second[1] >= 3) return { key: first[0], reason: `${first[0]} 比第二高的选项多 ${first[1] - second[1]} 次，达到纯型判定条件` };
-    // 双高：最高与次高相差不超过 2，按两项组合映射。
     const pair = [first[0], second[0]].sort().join("");
     return { key: pair, reason: `${first[0]} 与 ${second[0]} 两项分数接近，归入双高混合型` };
+  }
+
+  function shortLabel(key) {
+    return (data.shortLabels && data.shortLabels[key]) || key;
+  }
+
+  function buildPartnerPicker() {
+    const picker = $("partner-picker");
+    picker.innerHTML = "";
+    const order = data.resultOrder || Object.keys(data.results);
+    order.forEach((key) => {
+      const result = data.results[key];
+      if (!result) return;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "partner-chip" + (partnerKey === key ? " selected" : "");
+      btn.setAttribute("role", "option");
+      btn.setAttribute("aria-selected", partnerKey === key ? "true" : "false");
+      btn.dataset.key = key;
+      const label = document.createElement("span");
+      label.className = "partner-chip-label";
+      label.textContent = shortLabel(key);
+      const title = document.createElement("span");
+      title.className = "partner-chip-title";
+      title.textContent = (result.title || "").split("｜")[0];
+      btn.append(label, title);
+      btn.addEventListener("click", () => {
+        partnerKey = key;
+        renderChemistry();
+        buildPartnerPicker();
+        updateShareText();
+      });
+      picker.appendChild(btn);
+    });
+  }
+
+  function renderChemistry() {
+    const chem = $("partner-chemistry");
+    const empty = $("partner-empty");
+    if (!partnerKey || !myResultKey) {
+      chem.classList.add("hidden");
+      empty.classList.remove("hidden");
+      return;
+    }
+    const pairKey = `${myResultKey}>${partnerKey}`;
+    const pairing = data.pairings && data.pairings[pairKey];
+    const me = data.results[myResultKey];
+    const her = data.results[partnerKey];
+    $("chem-you").textContent = shortLabel(myResultKey);
+    $("chem-her").textContent = shortLabel(partnerKey);
+    if (pairing) {
+      $("chem-title").textContent = pairing.title;
+      $("chem-desc").textContent = pairing.description;
+    } else {
+      $("chem-title").textContent = `${me.title} × ${her.title}`;
+      $("chem-desc").textContent = "这两种互动风格碰在一起，会有各自的节奏和火花。多试试其他组合，看看哪一种最像你们。";
+    }
+    chem.classList.remove("hidden");
+    empty.classList.add("hidden");
+  }
+
+  function updateShareText() {
+    if (!myResultKey) return;
+    const result = data.results[myResultKey];
+    const match = result.match;
+    let text = `我的测试结果是「${result.title}」\n${result.tag}\n\n${result.description}`;
+    if (match) {
+      text += `\n\n更适配：${match.name}\n${match.line}\n${match.description}`;
+    }
+    if (partnerKey && data.pairings) {
+      const pairing = data.pairings[`${myResultKey}>${partnerKey}`];
+      const her = data.results[partnerKey];
+      if (pairing && her) {
+        text += `\n\n假设对象是「${her.title}」：\n${pairing.title}\n${pairing.description}`;
+      }
+    }
+    text += `\n\n来测测你的互动偏好：${window.location.href}`;
+    lastResultText = text;
   }
 
   function renderResult() {
     const counts = { A: 0, B: 0, C: 0, D: 0 };
     answers.forEach((answer) => { if (answer) counts[answer] += 1; });
     const outcome = getOutcome(counts);
+    myResultKey = outcome.key;
+    partnerKey = null;
     const result = data.results[outcome.key];
     $("result-title").textContent = result.title;
     $("result-tag").textContent = result.tag;
     $("result-summary").textContent = result.description;
+
+    const match = result.match;
+    if (match) {
+      $("match-name").textContent = match.name;
+      $("match-line").textContent = match.line;
+      $("match-desc").textContent = match.description;
+    } else {
+      $("match-name").textContent = "还在探索中";
+      $("match-line").textContent = "";
+      $("match-desc").textContent = "不同的人会唤醒你不同的一面，适合你的不一定只有一种。";
+    }
+
     $("score-bars").innerHTML = "";
     Object.entries(counts).forEach(([key, value]) => {
       const row = document.createElement("div");
@@ -87,7 +177,10 @@
       $("score-bars").appendChild(row);
     });
     $("score-explain").textContent = `计分结果：${outcome.reason}。A=${counts.A}，B=${counts.B}，C=${counts.C}，D=${counts.D}。`;
-    lastResultText = `我的测试结果是「${result.title}」\n${result.tag}\n\n${result.summary}\n\n来测测你的互动偏好：${window.location.href}`;
+
+    buildPartnerPicker();
+    renderChemistry();
+    updateShareText();
     $("share-feedback").textContent = "";
     showScreen("result-screen");
   }
@@ -95,6 +188,8 @@
   $("start-btn").addEventListener("click", () => {
     current = 0;
     answers = Array(data.questions.length).fill(null);
+    myResultKey = null;
+    partnerKey = null;
     renderQuestion();
     showScreen("quiz-screen");
   });
@@ -104,9 +199,12 @@
   $("restart-btn").addEventListener("click", () => {
     current = 0;
     answers = Array(data.questions.length).fill(null);
+    myResultKey = null;
+    partnerKey = null;
     showScreen("start-screen");
   });
   $("share-btn").addEventListener("click", async () => {
+    updateShareText();
     try {
       if (navigator.share) {
         await navigator.share({ title: "测测你的 XP", text: lastResultText });
@@ -130,7 +228,6 @@
     }
   });
 
-  // 支持通过 ?start=1 直接进入答题页，方便将链接发给参与者。
   if (new URLSearchParams(window.location.search).get("start") === "1") {
     current = 0;
     renderQuestion();

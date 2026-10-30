@@ -121,3 +121,175 @@ h1 em { color: var(--rose); font-style: normal; }
   .result-summary { font-size: 13px; line-height: 2.05; }
   .score-panel { padding: 18px 15px; }
 }
+
+/* —— 结果页：适配对象 & 假设对象 —— */
+.panel-heading { text-align: left; margin-bottom: 14px; }
+.panel-heading .kicker { margin-bottom: 4px; }
+.panel-heading h3 {
+  margin: 0;
+  font-family: "Noto Serif SC", serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.match-panel {
+  margin: 8px auto 18px;
+  max-width: 760px;
+  padding: 22px 24px;
+  border: 1px solid #eadde1;
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(255,252,249,.95), rgba(251,236,241,.75));
+  text-align: left;
+  box-shadow: var(--shadow);
+}
+.match-name {
+  margin: 0 0 6px;
+  font-family: "Noto Serif SC", serif;
+  font-size: clamp(22px, 5vw, 28px);
+  font-weight: 600;
+  color: var(--rose-dark);
+  letter-spacing: .04em;
+}
+.match-line {
+  margin: 0 0 12px;
+  color: #b07889;
+  font-size: 12px;
+  letter-spacing: .06em;
+  line-height: 1.6;
+}
+.match-desc {
+  margin: 0;
+  color: #79666d;
+  font-size: 13px;
+  line-height: 2;
+}
+.partner-panel {
+  margin: 18px auto 8px;
+  max-width: 760px;
+  padding: 22px 24px;
+  border: 1px solid #eadde1;
+  border-radius: 18px;
+  background: rgba(255,252,249,.88);
+  text-align: left;
+}
+.partner-hint {
+  margin: 0 0 14px;
+  color: #a38d94;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.partner-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.partner-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #eadde1;
+  border-radius: 12px;
+  background: #fff;
+  color: #67545b;
+  cursor: pointer;
+  transition: border .18s, background .18s, transform .18s, box-shadow .18s;
+  text-align: left;
+}
+.partner-chip:hover {
+  border-color: #d5a5b2;
+  transform: translateY(-1px);
+}
+.partner-chip.selected {
+  border-color: #bd7c8f;
+  background: #fbf0f3;
+  box-shadow: 0 0 0 2px rgba(189,124,143,.1);
+}
+.partner-chip-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #b27486;
+  letter-spacing: .04em;
+}
+.partner-chip.selected .partner-chip-label { color: var(--rose-dark); }
+.partner-chip-title {
+  font-size: 10px;
+  color: #a38d94;
+  line-height: 1.4;
+  max-width: 9.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.partner-chemistry {
+  padding: 18px 18px 16px;
+  border-radius: 14px;
+  background: rgba(245,231,235,.65);
+  animation: appear .35s ease both;
+}
+.chemistry-pair {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.chemistry-you, .chemistry-her {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 88px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.85);
+}
+.chemistry-you small, .chemistry-her small {
+  font-size: 9px;
+  letter-spacing: .16em;
+  color: #b28c98;
+  font-weight: 800;
+}
+.chemistry-you strong, .chemistry-her strong {
+  font-family: "Noto Serif SC", serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.chemistry-x {
+  color: #c58b9b;
+  font-size: 16px;
+  font-weight: 700;
+}
+.chemistry-title {
+  margin: 0 0 10px;
+  text-align: center;
+  font-family: "Noto Serif SC", serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--rose-dark);
+  line-height: 1.55;
+}
+.chemistry-desc {
+  margin: 0;
+  color: #79666d;
+  font-size: 13px;
+  line-height: 2.05;
+}
+.partner-empty {
+  margin: 4px 0 0;
+  color: #b7a3a9;
+  font-size: 11px;
+  text-align: center;
+}
+@media (max-width: 560px) {
+  .match-panel, .partner-panel { padding: 18px 15px; border-radius: 15px; }
+  .match-desc, .chemistry-desc { font-size: 12px; line-height: 1.95; }
+  .partner-chip { padding: 9px 10px; }
+  .partner-chip-title { max-width: 7.5em; }
+  .chemistry-pair { gap: 8px; }
+}

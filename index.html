@@ -61,11 +61,42 @@
       <div class="result-description-wrap">
         <p id="result-summary" class="result-summary"></p>
       </div>
+
+      <section class="match-panel" aria-label="更适配什么样的人">
+        <div class="panel-heading">
+          <p class="kicker">BEST MATCH FOR YOU</p>
+          <h3>更适配什么样的人</h3>
+        </div>
+        <p class="match-name" id="match-name"></p>
+        <p class="match-line" id="match-line"></p>
+        <p class="match-desc" id="match-desc"></p>
+      </section>
+
       <section class="score-panel">
         <div class="score-heading"><div><p class="kicker">YOUR ANSWER PATTERN</p><h3>你的选择分布</h3></div><span>共 25 题</span></div>
         <div id="score-bars" class="score-bars"></div>
         <p class="score-explain" id="score-explain"></p>
       </section>
+
+      <section class="partner-panel" aria-label="假设我的对象是">
+        <div class="panel-heading">
+          <p class="kicker">IF SHE WERE…</p>
+          <h3>假设我的对象是</h3>
+        </div>
+        <p class="partner-hint">点选一种结果类型，看看你们碰在一起会怎样。可以随时换，多试几种。</p>
+        <div id="partner-picker" class="partner-picker" role="listbox" aria-label="选择对象的结果类型"></div>
+        <div id="partner-chemistry" class="partner-chemistry hidden">
+          <div class="chemistry-pair">
+            <span class="chemistry-you"><small>你</small><strong id="chem-you"></strong></span>
+            <span class="chemistry-x" aria-hidden="true">×</span>
+            <span class="chemistry-her"><small>她</small><strong id="chem-her"></strong></span>
+          </div>
+          <p class="chemistry-title" id="chem-title"></p>
+          <p class="chemistry-desc" id="chem-desc"></p>
+        </div>
+        <p id="partner-empty" class="partner-empty">还没有选择——点上面任意一种类型开始看互动。</p>
+      </section>
+
       <p class="result-footnote">这不是固定的人格标签。不同的人、不同的关系阶段，都可能让你呈现不同的一面。</p>
       <div class="result-actions">
         <button id="share-btn" class="primary-btn">分享我的结果 <span>↗</span></button>
